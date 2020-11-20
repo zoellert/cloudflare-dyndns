@@ -15,3 +15,20 @@
 `go build`
 
 Use a reverse proxy for ssl encryption!
+
+## Docker Setup
+
+Build Docker container:
+`docker build -t cloudflare-dyndns:0.1 .`
+
+Run Docker container:
+```
+docker run --name <container-name> -d \
+    -e APP_MODE="release" \
+    -e APP_PORT="8080" \
+    -e CLOUDFLARE_API_KEY="<your-cloudflare-key" \
+    -e CLOUDFLARE_ZONE="<your-cloudflare-zone>" \
+    -e CLOUDFLARE_MAIL="<your-cloudflare-email>" \
+    -e UPDATE_PASSWORD="<password for update user>" \
+    cloudflare-dyndns:0.1
+```
