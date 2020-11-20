@@ -24,9 +24,11 @@ Build Docker container:
 Run Docker container:
 ```
 docker run --name <container-name> -d \
+    --restart=always \
+    -p 127.0.0.1:8080:8080 \
     -e APP_MODE="release" \
     -e APP_PORT="8080" \
-    -e CLOUDFLARE_API_KEY="<your-cloudflare-key" \
+    -e CLOUDFLARE_API_KEY="<your-cloudflare-key>" \
     -e CLOUDFLARE_ZONE="<your-cloudflare-zone>" \
     -e CLOUDFLARE_MAIL="<your-cloudflare-email>" \
     -e UPDATE_PASSWORD="<password for update user>" \
