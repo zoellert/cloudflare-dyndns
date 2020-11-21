@@ -34,3 +34,22 @@ docker run --name <container-name> -d \
     -e UPDATE_PASSWORD="<password for update user>" \
     cloudflare-dyndns:0.1
 ```
+
+## Router Setup
+
+### Securepoint
+
+| Setting | Value |
+|---|---|
+|Hostname|<dyndns-domain-name like home.your-domain.de>|
+|Username|`update`|
+|Password|\<password defnied in UPDATE_PASSWORD environment variable>|
+|Server|\<Address to your instance of this dyndns server like dyndns-server.your-domain.de>|
+
+### FritzBox
+| Setting | Value |
+|---|---|
+|URL|`https://dnydns-server.your-domain.de/nic/update?hostname=<domain>&myip=<ipaddr>`|
+|Domainname|<dyndns-domain-name like home.your-domain.de>|
+|Username|`update`| 
+|Password| \<password defnied in UPDATE_PASSWORD environment variable> |
