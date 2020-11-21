@@ -15,11 +15,15 @@ func UpdateDNSRecord(c *gin.Context) {
 		return
 	}
 
-	err := services.UpdateDNSRecord(hostname, ip)
+	err, hasChanged := services.UpdateDNSRecord(hostname, ip)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to update dns record")
 		return
 	}
 
-	c.String(http.StatusOK, "Updated successfully")
+	if hasChanged {
+		c.String(http.StatusOK, "good "+ip)
+	} else {
+		c.String(http.StatusOK, "nochg "+ip)
+	}
 }

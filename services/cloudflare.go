@@ -30,13 +30,15 @@ func InitCloudflare() {
 	zoneId = id
 }
 
-func UpdateDNSRecord(name, ip string) error {
+// Returns true if the ip has changed
+// Returns false if the ip has not changed
+func UpdateDNSRecord(name, ip string) (error, bool) {
 	recordFilter := cloudflare.DNSRecord{Type: "A", Name: name}
 	recs, err := API.DNSRecords(zoneId, recordFilter)
 	if err != nil {
 		log.Print("Failed to get Cloudflare dns records")
 		log.Print(err)
-		return fmt.Errorf("failed to get cloudflare dns records")
+		return fmt.Errorf("failed to get cloudflare dns records"), false
 	}
 
 	newRecord := cloudflare.DNSRecord{
@@ -52,19 +54,23 @@ func UpdateDNSRecord(name, ip string) error {
 		if err != nil {
 			log.Printf("Failed to create dns record")
 			log.Print(err)
-			return fmt.Errorf("failed to create dns record")
+			return fmt.Errorf("failed to create dns record"), false
 		}
-		return nil
+		return nil, true
 	}
 
 	for _, rec := range recs {
-		err := API.UpdateDNSRecord(zoneId, rec.ID, newRecord)
-		if err != nil {
-			log.Printf("Failed to update dns record")
-			log.Print(err)
-			return fmt.Errorf("failed to udpate dns record")
+		if rec.Content == ip {
+			return nil, false
+		} else {
+			err := API.UpdateDNSRecord(zoneId, rec.ID, newRecord)
+			if err != nil {
+				log.Printf("Failed to update dns record")
+				log.Print(err)
+				return fmt.Errorf("failed to udpate dns record"), false
+			}
+			return nil, true
 		}
-		return nil
 	}
-	return nil
+	return fmt.Errorf("internal server error"), false
 }
